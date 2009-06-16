@@ -48,12 +48,14 @@ In order to get nginx to boot up on reboot, use the init script in this git repo
 
 deploy user
 ===========
-sudo /usr/sbin/adduser deploy
-cp ~/.ssh/authorized_keys /tmp/
-sudo -u deploy -i
-mkdir .ssh
-chmod go-rwx .ssh
-cat /tmp/authorized_keys > ~/.ssh/authorized_keys
-chmod go-w ~/.ssh/authorized_keys 
-exit
-rm /tmp/authorized_keys
+Create a new deploy user and copy your SSH public key into the new
+
+    sudo /usr/sbin/adduser deploy
+    cp ~/.ssh/authorized_keys /tmp/
+    sudo -u deploy -i
+    mkdir .ssh
+    chmod go-rwx .ssh
+    cat /tmp/authorized_keys > ~/.ssh/authorized_keys
+    chmod go-w ~/.ssh/authorized_keys 
+    exit
+    rm /tmp/authorized_keys
