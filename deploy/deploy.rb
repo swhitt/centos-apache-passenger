@@ -1,4 +1,4 @@
-set :application,   'compass'
+set :application,   'appname'
 set :repository,    "git@github.com:swhitt/#{application}.git"
 
 task :staging do
@@ -17,6 +17,7 @@ end
 set :keep_releases, 5
 
 set :user, 'deploy'
+set :use_sudo, false
 
 set :scm,           :git
 set :branch,        'master'
@@ -24,14 +25,11 @@ set :branch,        'master'
 set :deploy_to,     "/home/deploy/rails/#{application}"
 set :deploy_via,    :remote_cache
 
-# comment out if it gives you trouble. newest net/ssh needs this set.
-ssh_options[:paranoid] = false
-default_run_options[:pty] = true
-ssh_options[:forward_agent] = true
+set :ssh_options, {:forward_agent => true}
+
 
 # This will execute the Git revision parsing on the *remote* server rather than locally
 set :real_revision, 			lambda { source.query_revision(revision) { |cmd| capture(cmd) } }
-
 
 namespace :deploy do
   task :symlink_configs, :roles => :app, :except => {:no_symlink => true} do
