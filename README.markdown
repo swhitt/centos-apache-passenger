@@ -78,3 +78,12 @@ Next you need to set the LD_LIBRARY_PATH variable by adding the following line t
 
 Ruby OCI8
 ---------
+Get the latest ruby-oci8 tar.gz from [rubyforge](http://rubyforge.org/frs/?group_id=256). 
+  
+    cd ~/src
+    wget http://rubyforge.org/frs/download.php/56925/ruby-oci8-1.0.6.tar.gz
+    tar -zxvf ruby-oci8-1.0.6.tar.gz
+    cd ruby-oci8-1.0.6
+    make
+    sudo -E make install
+    
