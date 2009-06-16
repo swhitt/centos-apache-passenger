@@ -1,6 +1,8 @@
 A simple recipe for nginx+passenger on CentOS
 =============================================
 
+Similar to jnstq's [rails-nginx-passenger-ubuntu](http://github.com/jnstq/rails-nginx-passenger-ubuntu) recipe but for nginx+passenger on CentOS. Includes a deploy script and init script.
+
 Developer Tools
 ---------------
     sudo yum update

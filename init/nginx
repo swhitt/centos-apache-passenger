@@ -1,6 +1,9 @@
 #!/bin/sh
 #
-# nginx - this script starts and stops the nginx daemin
+# Modified from the version here:
+# http://articles.slicehost.com/2009/2/2/centos-adding-an-nginx-init-script
+#
+# nginx - this script starts and stops the nginx daemon
 #
 # chkconfig:   - 85 15 
 # description:  Nginx is an HTTP(S) server, HTTP(S) reverse \
