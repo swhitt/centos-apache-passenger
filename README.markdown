@@ -21,7 +21,7 @@ MySQL and Libraries
 
 Ruby Enterprise Edition
 =======================
-You can get the latest version of REE from http://www.rubyenterpriseedition.com/. Use the latest version (at the time of writing it is 1.8.6-20090610)
+You can get the latest version of REE from [http://www.rubyenterpriseedition.com/](http://www.rubyenterpriseedition.com/). Use the latest version (at the time of writing it is 1.8.6-20090610)
 
     wget http://www.rubyenterpriseedition.com/ruby-enterprise-1.8.6-20090610.tar.gz
     tar -zxvf ruby-enterprise-1.8.6-20090610.tar.gz
@@ -45,4 +45,15 @@ In order to get nginx to boot up on reboot, use the init script in this git repo
     sudo cp centos-nginx-passenger/init/nginx /etc/init.d
     sudo chmod +x /etc/init.d/nginx
     sudo /sbin/chkconfig nginx on
-    
+
+deploy user
+===========
+sudo /usr/sbin/adduser deploy
+cp ~/.ssh/authorized_keys /tmp/
+sudo -u deploy -i
+mkdir .ssh
+chmod go-rwx .ssh
+cat /tmp/authorized_keys > ~/.ssh/authorized_keys
+chmod go-w ~/.ssh/authorized_keys 
+exit
+rm /tmp/authorized_keys
