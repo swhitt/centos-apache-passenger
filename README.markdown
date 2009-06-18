@@ -51,6 +51,8 @@ In order to get nginx to boot up on reboot, use the init script in this git repo
     sudo chmod +x /etc/init.d/nginx
     sudo /sbin/chkconfig nginx on
 
+chown -R 
+
 deploy user
 -----------
 Create a new deploy user and copy your SSH public key into the new
@@ -89,3 +91,11 @@ Get the latest ruby-oci8 tar.gz from [rubyforge](http://rubyforge.org/frs/?group
     make
     sudo -E make install
     
+Various additional steps
+------------------------
+If you want you can set your default RAILS_ENV to the environment that you plan on using on this computer. This will make it easier when you are logged in to the shell - you won't have to specify RAILS_ENV while running rake.
+To do this, add 
+
+  export RAILS_ENV='production'
+
+to /etc/profile, replacing production with the environment you want. 
