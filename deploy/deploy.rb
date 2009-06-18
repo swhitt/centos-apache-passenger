@@ -31,6 +31,9 @@ set :ssh_options, {:forward_agent => true}
 # This will execute the Git revision parsing on the *remote* server rather than locally
 set :real_revision, 			lambda { source.query_revision(revision) { |cmd| capture(cmd) } }
 
+after "deploy:symlink", "deploy:symlink_configs"
+
+
 namespace :deploy do
   task :symlink_configs, :roles => :app, :except => {:no_symlink => true} do
     run <<-CMD

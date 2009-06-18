@@ -1,7 +1,7 @@
 A simple recipe for nginx+passenger on CentOS
 =============================================
 
-Similar to jnstq's [rails-nginx-passenger-ubuntu](http://github.com/jnstq/rails-nginx-passenger-ubuntu) recipe but for nginx+passenger on CentOS. Includes a deploy script and init script.
+Similar to jnstq's [rails-nginx-passenger-ubuntu](http://github.com/jnstq/rails-nginx-passenger-ubuntu) recipe but for nginx+passenger on CentOS. Also influenced by the deploy scripts used by EngineYard Solo. Includes a deploy script and init script.
 
 Developer Tools
 ---------------
@@ -33,25 +33,15 @@ You can get the latest version of REE from [the official site](http://www.rubyen
     cd ruby-enterprise-1.8.6-20090610
     sudo ./installer
 
+    sudo ln -s /opt/ruby-enterprise-1.8.6-20090610/bin/ruby /usr/bin/ruby
+    sudo ln -s /opt/ruby-enterprise-1.8.6-20090610/bin/gem /usr/bin/gem
+    sudo ln -s /opt/ruby-enterprise-1.8.6-20090610/bin/irb /usr/bin/irb
+    
+
 We're going to want to add REE to the path so we can use things like 'ruby' and 'gem' from the commandline. 
-
-    echo "export PATH=/opt/ruby-enterprise-1.8.6-20090610/bin:$PATH" >> ~/.bash_profile && . ~/.bash_profile
-
-nginx
------
-nginx does not have the ability to dynamically load modules like apache so we have to recompile it. Thankfully Ruby Enterprise Edition has a handy script that will automatically do this for you and set up REE to work with it. 
-
-    sudo /opt/ruby-enterprise-1.8.6-20090610/bin/passenger-install-nginx-module
-  
-In order to get nginx to boot up on reboot, use the init script in this git repository.
-
-    cd ~/src
-    git clone git://github.com/swhitt/centos-nginx-passenger.git
-    sudo cp centos-nginx-passenger/init/nginx /etc/init.d
-    sudo chmod +x /etc/init.d/nginx
-    sudo /sbin/chkconfig nginx on
-
-chown -R 
+ 
+    
+    su -c 'echo "export PATH=/opt/ruby-enterprise-1.8.6-20090610/bin:$PATH" >> /etc/profile'
 
 deploy user
 -----------
@@ -66,7 +56,25 @@ Create a new deploy user and copy your SSH public key into the new
     chmod go-w ~/.ssh/authorized_keys 
     exit
     rm /tmp/authorized_keys
+
+nginx
+-----
+nginx does not have the ability to dynamically load modules like apache so we have to recompile it. Thankfully Ruby Enterprise Edition has a handy script that will automatically do this for you and set up REE to work with it. 
+
+    sudo /opt/ruby-enterprise-1.8.6-20090610/bin/passenger-install-nginx-module
+    cd ~/src
+    git clone git://github.com/swhitt/centos-nginx-passenger.git
+    sudo cp -R centos-nginx-passenger/nginx/* /opt/nginx/conf/
     
+Now you can edit the files in /opt/nginx/conf.
+  
+In order to get nginx to boot up on reboot, use the init script in this git repository.
+
+    sudo cp centos-nginx-passenger/init/nginx /etc/init.d
+    sudo chmod +x /etc/init.d/nginx
+    sudo /sbin/chkconfig nginx on
+    
+
 Oracle Instant Client
 ---------------------
 In order to use the activerecord-oracle driver you need to have ruby-oci8 installed, which requires the Oracle Instant Client to be installed. You can get the latest copy [here](http://www.oracle.com/technology/software/tech/oci/instantclient/htdocs/linuxsoft.html), OTN login required. Get the Instant Client Basic, SDK and SQL*Plus rpms.
@@ -75,10 +83,14 @@ In order to use the activerecord-oracle driver you need to have ruby-oci8 instal
     sudo rpm -i oracle-instantclient11.1-devel-11.1.0.7.0-1.i386.rpm
     sudo rpm -i oracle-instantclient11.1-sqlplus-11.1.0.7.0-1.i386.rpm
  
-Next you need to set the LD_LIBRARY_PATH variable by adding the following line to your .bash_profile: 
+Next you need to set the LD\_LIBRARY_PATH variable by editing /etc/profile
 
-    export LD_LIBRARY_PATH=/usr/lib/oracle/11.1/client/lib:$LD_LIBRARY_PATH
+    su -c 'echo "export LD\_LIBRARY_PATH=/usr/lib/oracle/11.1/client/lib:\$LD_LIBRARY_PATH" >> /etc/profile'
 
+Put your tnsnames.ora file in /etc
+  
+    su -c 'echo "export TNS_ADMIN=/etc" >> /etc/profile'
+    
 
 Ruby OCI8
 ---------
@@ -93,7 +105,7 @@ Get the latest ruby-oci8 tar.gz from [rubyforge](http://rubyforge.org/frs/?group
     
 Various additional steps
 ------------------------
-If you want you can set your default RAILS_ENV to the environment that you plan on using on this computer. This will make it easier when you are logged in to the shell - you won't have to specify RAILS_ENV while running rake.
+If you want you can set your default RAILS\_ENV to the environment that you plan on using on this computer. This will make it easier when you are logged in to the shell - you won't have to specify RAILS\_ENV while running rake.
 To do this, add 
 
   export RAILS_ENV='production'
