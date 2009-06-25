@@ -19,7 +19,7 @@ MySQL and Libraries
 -------------------
     sudo yum install mysql-server mysql mysql-devel
     sudo /etc/init.d/mysqld start
-    /usr/bin/mysqladmin -u root password 'newrootpass'
+    /usr/bin/mysqladmin -u root password 'newpassword'
     sudo yum install readline-devel
 
 
@@ -28,7 +28,7 @@ Ruby Enterprise Edition
 You can get the latest version of REE from [the official site](http://www.rubyenterpriseedition.com/). Use the latest version (at the time of writing it is 1.8.6-20090610)
     
     mkdir ~/src && cd ~/src
-    wget http://www.rubyenterpriseedition.com/ruby-enterprise-1.8.6-20090610.tar.gz
+    wget http://rubyforge.org/frs/download.php/58677/ruby-enterprise-1.8.6-20090610.tar.gz
     tar -zxvf ruby-enterprise-1.8.6-20090610.tar.gz
     cd ruby-enterprise-1.8.6-20090610
     sudo ./installer
@@ -71,7 +71,12 @@ Note - our firewall blocks outgoing FTP access. The PCRE installation uses a har
     sudo cp -R centos-nginx-passenger/nginx/* /opt/nginx/conf/
     
 Now you can edit the files in /opt/nginx/conf.
-  
+
+Start up nginx with:
+
+    sudo mkdir /var/log/nginx
+    sudo /etc/init.d/nginx start
+
 In order to get nginx to boot up on reboot, use the init script in this git repository.
 
     sudo cp centos-nginx-passenger/init/nginx /etc/init.d
@@ -89,9 +94,9 @@ In order to use the activerecord-oracle driver you need to have ruby-oci8 instal
  
 Next you need to set the LD\_LIBRARY_PATH variable by editing /etc/profile
 
-    su -c 'echo "export LD\_LIBRARY_PATH=/usr/lib/oracle/11.1/client/lib:\$LD_LIBRARY_PATH" >> /etc/profile'
+    su -c 'echo "export LD_LIBRARY_PATH=/usr/lib/oracle/11.1/client/lib:\$LD_LIBRARY_PATH" >> /etc/profile'
 
-Put your tnsnames.ora file in /etc
+Put your tnsnames.ora file in /etc and then set your TNS\_ADMIN environment variable
   
     su -c 'echo "export TNS_ADMIN=/etc" >> /etc/profile'
     

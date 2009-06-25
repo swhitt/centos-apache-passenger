@@ -25,7 +25,7 @@ set :branch,        'master'
 set :deploy_to,     "/home/deploy/rails/#{application}"
 set :deploy_via,    :remote_cache
 
-set :ssh_options, {:forward_agent => true}
+set :ssh_options, {:forward_agent => true, :paranoid => false}
 
 
 # This will execute the Git revision parsing on the *remote* server rather than locally
