@@ -20,6 +20,7 @@ MySQL and Libraries
     sudo yum install mysql-server mysql mysql-devel
     sudo /etc/init.d/mysqld start
     /usr/bin/mysqladmin -u root password 'newpassword'
+    /sbin/chkconfig mysqld on
     sudo yum install readline-devel
 
 
@@ -64,7 +65,7 @@ nginx does not have the ability to dynamically load modules like apache so we ha
 
     sudo /opt/ruby-enterprise/bin/passenger-install-nginx-module
     
-Note - our firewall blocks outgoing FTP access. The PCRE installation uses a hardcoded FTP address to download its tar.gz. You can edit the file using sudo vi `/opt/ruby-enterprise/bin/passenger-config --root`/bin/passenger-install-nginx-module and change the url line in the download\_and\_extract\_pcre method tourl = "http://voxel.dl.sourceforge.net/sourceforge/pcre/#{basename}".
+Note - our firewall blocks outgoing FTP access. The PCRE installation uses a hardcoded FTP address to download its tar.gz. You can edit the file using sudo vi `/opt/ruby-enterprise/bin/passenger-config --root`/bin/passenger-install-nginx-module and change the url line in the download\_and\_extract\_pcre method to url = "http://voxel.dl.sourceforge.net/sourceforge/pcre/#{basename}".
 
     cd ~/src
     git clone git://github.com/swhitt/centos-nginx-passenger.git
@@ -72,17 +73,16 @@ Note - our firewall blocks outgoing FTP access. The PCRE installation uses a har
     
 Now you can edit the files in /opt/nginx/conf.
 
-Start up nginx with:
-
-    sudo mkdir /var/log/nginx
-    sudo /etc/init.d/nginx start
-
 In order to get nginx to boot up on reboot, use the init script in this git repository.
 
     sudo cp centos-nginx-passenger/init/nginx /etc/init.d
     sudo chmod +x /etc/init.d/nginx
     sudo /sbin/chkconfig nginx on
-    
+
+Start up nginx right now with:
+
+    sudo mkdir /var/log/nginx
+    sudo /etc/init.d/nginx start    
 
 Oracle Instant Client
 ---------------------
@@ -112,6 +112,38 @@ Get the latest ruby-oci8 tar.gz from [rubyforge](http://rubyforge.org/frs/?group
     make
     sudo -E make install
     
+Getting Passenger to work with OCI8
+-----------------------------------
+Place the oracle/ruby\_with\_oracle\_env script in /home/deploy and change nginx.conf's passenger\_ruby line to passenger\_ruby /home/deploy/ruby\_with\_oracle\_env.
+
+
+RMagick
+-------
+    wget http://www.zacharywhitley.com/linux/rpms/fedora/core/6/i386/msttcorefonts-2.0-1.noarch.rpm
+    rpm -i msttcorefonts-2.0-1.noarch.rpm
+    ln -s /usr/share/fonts/msttcorefonts /usr/share/fonts/default/TrueType
+
+    yum install ImageMagick
+    yum install ImageMagick-devel
+    gem install rmagick -v 1.15.17 --no-rdoc --no-ri
+    nano /opt/ruby-enterprise-1.8.6-20090610/lib/ruby/gems/1.8/gems/rmagick-1.15.17/ext/RMagick/rmmain.c
+
+Change sprintf(long\_version)... to 
+
+    sprintf(long_version, "This is %s ($Date: 2008/11/25 23:21:15 $) Copyright (C) 2008 by Timothy P. Hunter\n", PACKAGE_STRING);
+
+    cd ../..
+    gem build rmagick.gemspec
+    gem install rmagick-1.15.17.gem
+
+Memcached
+---------
+If you need memcached, install it like this:
+
+    sudo yum install memcached
+    sudo /sbin/chkconfig memcached on
+    sudo /etc/init.d/memcached start
+    
 Various additional steps
 ------------------------
 If you want you can set your default RAILS\_ENV to the environment that you plan on using on this computer. This will make it easier when you are logged in to the shell - you won't have to specify RAILS\_ENV while running rake.
@@ -120,3 +152,16 @@ To do this, add
   export RAILS_ENV='production'
 
 to /etc/profile, replacing production with the environment you want. 
+
+
+USING APACHE INSTEAD
+--------------------
+
+    sudo yum install httpd mod_ssl
+    sudo yum install httpd-devel
+    sudo /sbin/chkconfig httpd on
+
+    sudo gem update
+    sudo gem install passenger
+    sudo passenger-install-apache2-module
+
