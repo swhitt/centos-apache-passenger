@@ -1,7 +1,7 @@
 A simple recipe for nginx+passenger on CentOS
 =============================================
 
-Similar to jnstq's [rails-nginx-passenger-ubuntu](http://github.com/jnstq/rails-nginx-passenger-ubuntu) recipe but for nginx+passenger on CentOS. Also influenced by the deploy scripts used by EngineYard Solo. Includes a deploy script and init script.
+Similar to jnstq's [rails-nginx-passenger-ubuntu](http://github.com/jnstq/rails-nginx-passenger-ubuntu) recipe but for nginx+passenger/apache+passenger on CentOS. Also influenced by the deploy scripts used by EngineYard Solo. Includes a deploy script and init script for nginx as well as configuration files for apache.
 
 Developer Tools
 ---------------
@@ -83,6 +83,23 @@ Start up nginx right now with:
 
     sudo mkdir /var/log/nginx
     sudo /etc/init.d/nginx start    
+    
+How to Use Apache Instead
+-------------------------
+First install apache and start it up:
+
+    sudo yum install httpd mod_ssl
+    sudo yum install httpd-devel
+    sudo /sbin/chkconfig httpd on
+    sudo /etc/init.d/httpd start
+
+Now install the passenger module for apache.
+
+    sudo gem update
+    sudo gem install passenger
+    sudo passenger-install-apache2-module
+
+You can copy the contents of the apache folder to /etc/httpd/conf. If you are hosting multiple sites on the same machine, create as many config files in the sites/ subdirectory as you need. They can be modeled after app.conf, just updated to point to the correct public directory.
 
 Oracle Instant Client
 ---------------------
@@ -152,16 +169,4 @@ To do this, add
   export RAILS_ENV='production'
 
 to /etc/profile, replacing production with the environment you want. 
-
-
-USING APACHE INSTEAD
---------------------
-
-    sudo yum install httpd mod_ssl
-    sudo yum install httpd-devel
-    sudo /sbin/chkconfig httpd on
-
-    sudo gem update
-    sudo gem install passenger
-    sudo passenger-install-apache2-module
 
