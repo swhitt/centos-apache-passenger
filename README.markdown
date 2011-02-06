@@ -1,3 +1,6 @@
+PLEASE NOTE: This is very old and out of date. I'm keeping it here for reference but I would definitely recommend updating this substantially before using it for anything mission-critical.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 A simple recipe for nginx+passenger on CentOS
 =============================================
 
